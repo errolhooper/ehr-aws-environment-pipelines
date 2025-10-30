@@ -1,0 +1,9 @@
+# Example Terraform variables file for courses environment
+# Copy this file to terraform.tfvars and customize as needed
+# WARNING: Do not commit terraform.tfvars to version control
+
+# AWS Region
+# region = "us-east-1"
+
+# Environment name
+# environment = "courses"
