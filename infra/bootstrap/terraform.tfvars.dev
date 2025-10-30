@@ -1,0 +1,12 @@
+region                             = "us-east-1"
+environment                        = "dev"
+account_id                         = "REPLACE_WITH_DEV_ACCOUNT_ID"
+bucket_name                        = "tfstate-dev-us-east-1"
+dynamodb_table_name                = "tf-locks-dev"
+create_kms_key                     = true
+noncurrent_version_expiration_days = 90
+enable_point_in_time_recovery      = true
+
+tags = {
+  Team = "Platform"
+}
