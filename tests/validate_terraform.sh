@@ -30,8 +30,9 @@ print_result() {
     fi
 }
 
-# Get the repository root
-REPO_ROOT="/home/runner/work/ehr-aws-environment-pipelines/ehr-aws-environment-pipelines"
+# Get the repository root dynamically
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 echo "Repository Root: $REPO_ROOT"
@@ -90,9 +91,9 @@ cd "$REPO_ROOT/infra/modules/tfstate-bucket"
 
 # Create a temporary test wrapper
 mkdir -p /tmp/test-tfstate-bucket
-cat > /tmp/test-tfstate-bucket/main.tf << 'EOF'
+cat > /tmp/test-tfstate-bucket/main.tf << EOF
 module "test" {
-  source = "/home/runner/work/ehr-aws-environment-pipelines/ehr-aws-environment-pipelines/infra/modules/tfstate-bucket"
+  source = "$REPO_ROOT/infra/modules/tfstate-bucket"
   
   bucket_name = "test-bucket"
   environment = "test"
@@ -117,9 +118,9 @@ cd "$REPO_ROOT/infra/modules/tfstate-lock"
 
 # Create a temporary test wrapper
 mkdir -p /tmp/test-tfstate-lock
-cat > /tmp/test-tfstate-lock/main.tf << 'EOF'
+cat > /tmp/test-tfstate-lock/main.tf << EOF
 module "test" {
-  source = "/home/runner/work/ehr-aws-environment-pipelines/ehr-aws-environment-pipelines/infra/modules/tfstate-lock"
+  source = "$REPO_ROOT/infra/modules/tfstate-lock"
   
   table_name  = "test-table"
   environment = "test"
