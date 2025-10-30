@@ -81,7 +81,7 @@ resource "aws_lambda_function" "example" {
   filename      = "${path.module}/lambda_placeholder.zip"
   function_name = "${var.environment}-vpc-lambda"
   role          = aws_iam_role.lambda.arn
-  handler       = "index.handler"
+  handler       = "lambda_index.handler"
   runtime       = "python3.11"
   timeout       = 30
   memory_size   = 128
@@ -100,7 +100,8 @@ resource "aws_lambda_function" "example" {
 
   depends_on = [
     aws_cloudwatch_log_group.lambda,
-    aws_iam_role_policy_attachment.lambda_vpc
+    aws_iam_role_policy_attachment.lambda_vpc,
+    null_resource.lambda_placeholder
   ]
 
   tags = {
@@ -124,9 +125,4 @@ resource "null_resource" "lambda_placeholder" {
       fi
     EOF
   }
-}
-
-# Ensure placeholder is created before Lambda
-resource "terraform_data" "lambda_code_dependency" {
-  depends_on = [null_resource.lambda_placeholder]
 }
