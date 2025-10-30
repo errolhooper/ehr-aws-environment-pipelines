@@ -1,0 +1,59 @@
+name: Terraform Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**.tf'
+      - '.github/workflows/terraform-validate.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**.tf'
+      - '.github/workflows/terraform-validate.yml'
+
+jobs:
+  validate:
+    name: Validate Terraform
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Validate VPC Module
+        working-directory: ./modules/vpc
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Validate Courses Environment
+        working-directory: ./environments/courses
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - name: Check Format Status
+        if: steps.fmt.outcome == 'failure'
+        run: |
+          echo "❌ Terraform formatting check failed"
+          echo "Please run 'terraform fmt -recursive' to fix formatting"
+          exit 1
+
+      - name: Validation Summary
+        if: success()
+        run: |
+          echo "✅ All Terraform validations passed!"
+          echo "- Format check: ✓"
+          echo "- VPC module: ✓"
+          echo "- Courses environment: ✓"
