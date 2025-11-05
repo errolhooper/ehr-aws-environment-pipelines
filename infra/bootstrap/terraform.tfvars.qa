@@ -1,0 +1,12 @@
+region                             = "us-east-1"
+environment                        = "qa"
+account_id                         = "REPLACE_WITH_QA_ACCOUNT_ID"
+bucket_name                        = "tfstate-qa-us-east-1"
+dynamodb_table_name                = "tf-locks-qa"
+create_kms_key                     = true
+noncurrent_version_expiration_days = 90
+enable_point_in_time_recovery      = true
+
+tags = {
+  Team = "Platform"
+}
